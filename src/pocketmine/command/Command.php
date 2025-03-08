@@ -40,6 +40,7 @@ use pocketmine\utils\TextFormat;
 use function explode;
 use function str_replace;
 use function strlen;
+use const PHP_INT_MAX;
 
 abstract class Command{
 
@@ -136,9 +137,9 @@ abstract class Command{
 	/**
 	 * @return void
 	 */
-	public function setPermission(string $permission = null){
-		$this->permission = $permission;
-	}
+	public function setPermission(?string $permission = null) {
+    $this->permission = $permission === null ? [] : explode(";", $permission, PHP_INT_MAX);
+}
 
 	public function testPermission(CommandSender $target) : bool{
 		if($this->testPermissionSilent($target)){
