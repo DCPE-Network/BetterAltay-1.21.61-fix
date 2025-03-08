@@ -138,36 +138,36 @@ abstract class Command{
 	 * @return void
 	 */
 	public function setPermission(?string $permission = null) {
-    $this->permission = $permission === null ? [] : (array)explode(";", $permission);
+    $this->permission = $permission === null ? "" : (string)$permission; 
 }
 
-	public function testPermission(CommandSender $target) : bool{
-		if($this->testPermissionSilent($target)){
-			return true;
-		}
+public function testPermission(CommandSender $target) : bool {
+    if ($this->testPermissionSilent($target)) {
+        return true;
+    }
 
-		if($this->permissionMessage === null){
-			$target->sendMessage($target->getServer()->getLanguage()->translateString(TextFormat::RED . "%commands.generic.permission"));
-		}elseif($this->permissionMessage !== ""){
-			$target->sendMessage(str_replace("<permission>", $this->permission, $this->permissionMessage));
-		}
+    if ($this->permissionMessage === null) {
+        $target->sendMessage($target->getServer()->getLanguage()->translateString(TextFormat::RED . "%commands.generic.permission"));
+    } elseif ($this->permissionMessage !== "") {
+        $target->sendMessage(str_replace("<permission>", $this->permission, $this->permissionMessage));
+    }
 
-		return false;
-	}
+    return false;
+}
 
-	public function testPermissionSilent(CommandSender $target) : bool{
-		if($this->permission === null or $this->permission === ""){
-			return true;
-		}
+public function testPermissionSilent(CommandSender $target) : bool {
+    if ($this->permission === "") {
+        return true;
+    }
 
-		foreach(explode(";", $this->permission) as $permission){
-			if($target->hasPermission($permission)){
-				return true;
-			}
-		}
+    foreach (explode(";", $this->permission) as $permission) {
+        if ($target->hasPermission(trim($permission))) { 
+            return true;
+        }
+    }
 
-		return false;
-	}
+    return false;
+}
 
 	public function getLabel() : string{
 		return $this->label;
