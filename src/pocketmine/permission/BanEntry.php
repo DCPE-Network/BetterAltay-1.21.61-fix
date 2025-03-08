@@ -159,35 +159,39 @@ class BanEntry{
 	/**
 	 * @throws RuntimeException
 	 */
-	public static function fromString(string $str) : ?BanEntry{
-		if(strlen($str) < 2){
+	public static function fromString(string $str) : ?BanEntry {
+		if (strlen($str) < 2) {
 			return null;
-		}else{
-			$str = explode("|", trim($str));
-			$entry = new BanEntry(trim(array_shift($str)));
-			if(count($str) === 0){
-				return $entry;
-			}
+		}
 
-			$entry->setCreated(self::parseDate(array_shift($str)));
-			if(count($str) === 0){
-				return $entry;
-			}
+		// Use a limit of 6 directly in the explode call on $str
+		$str = explode("|", trim($str), 6);
+		$entry = new BanEntry(trim(array_shift($str)));
 
-			$entry->setSource(trim(array_shift($str)));
-			if(count($str) === 0){
-				return $entry;
-			}
-
-			$expire = trim(array_shift($str));
-			if($expire !== "" and strtolower($expire) !== "forever"){
-				$entry->setExpires(self::parseDate($expire));
-			}
-			if(count($str) === 0){
-				return $entry;
-			}
-			$entry->setReason(trim(array_shift($str)));
+		if (count($str) === 0) {
 			return $entry;
 		}
+
+		$entry->setCreated(self::parseDate(array_shift($str)));
+		if (count($str) === 0) {
+			return $entry;
+		}
+
+		$entry->setSource(trim(array_shift($str)));
+		if (count($str) === 0) {
+			return $entry;
+		}
+
+		$expire = trim(array_shift($str));
+		if ($expire !== "" && strtolower($expire) !== "forever") {
+			$entry->setExpires(self::parseDate($expire));
+		}
+		if (count($str) === 0) {
+			return $entry;
+		}
+
+		$entry->setReason(trim(array_shift($str)));
+		return $entry;
 	}
-}
+} 
+
