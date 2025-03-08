@@ -138,7 +138,7 @@ abstract class Command{
 	 * @return void
 	 */
 	public function setPermission(?string $permission = null) {
-    $this->permission = $permission === null ? [] : explode(";", $permission, PHP_INT_MAX);
+    $this->permission = $permission === null ? [] : (array)explode(";", $permission);
 }
 
 	public function testPermission(CommandSender $target) : bool{
