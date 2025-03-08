@@ -248,10 +248,13 @@ JIT_WARNING
 		$version = new VersionString(\pocketmine\BASE_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER);
 		define('pocketmine\VERSION', $version->getFullVersion(true));
 
-		$composerGitHash = InstalledVersions::getReference('pocketmine/pocketmine-mp');
-		if($composerGitHash !== null){
-			$currentGitHash = explode("-", \pocketmine\GIT_COMMIT)[0];
-			if($currentGitHash !== $composerGitHash){
+		composerGitHash = InstalledVersions::getReference('pocketmine/pocketmine-mp');
+                 if ($composerGitHash !== null) {
+                // We can't verify dependency versions if installed without using Git
+              $currentGitHash = explode("-", \pocketmine\GIT_COMMIT)[0];
+             $currentGitHash = explode("-", \pocketmine\GIT_COMMIT, 2)[0];
+
+                         if ($currentGitHash !== $composerGitHash) {
 				critical_error("Composer dependencies and/or autoloader are out of sync.");
 				critical_error("- Current revision is $currentGitHash");
 				critical_error("- Composer dependencies were last synchronized for revision $composerGitHash");
