@@ -138,17 +138,17 @@ abstract class Command{
 	 * @return void
 	 */
 	public function setPermission(?string $permission = null) {
-    $this->permission = $permission === null ? "" : (string)$permission; 
+    $this->permission = $permission === null ? "" : $permission; // Ensure it's a string
 }
 
 public function testPermission(CommandSender $target) : bool {
-    if ($this->testPermissionSilent($target)) {
+    if($this->testPermissionSilent($target)){
         return true;
     }
 
-    if ($this->permissionMessage === null) {
+    if($this->permissionMessage === null){
         $target->sendMessage($target->getServer()->getLanguage()->translateString(TextFormat::RED . "%commands.generic.permission"));
-    } elseif ($this->permissionMessage !== "") {
+    } elseif($this->permissionMessage !== ""){
         $target->sendMessage(str_replace("<permission>", $this->permission, $this->permissionMessage));
     }
 
@@ -156,12 +156,12 @@ public function testPermission(CommandSender $target) : bool {
 }
 
 public function testPermissionSilent(CommandSender $target) : bool {
-    if ($this->permission === "") {
+    if ($this->permission === "") { // Change this to check for empty string
         return true;
     }
 
-    foreach (explode(";", $this->permission) as $permission) {
-        if ($target->hasPermission(trim($permission))) { 
+    foreach(explode(";", $this->permission) as $permission){
+        if($target->hasPermission($permission)){
             return true;
         }
     }
